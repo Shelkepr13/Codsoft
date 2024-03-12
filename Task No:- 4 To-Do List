@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+#include <list>
+
+using namespace std;
+
+struct Task {
+    string description;
+    bool completed;
+
+    Task(const string& desc) : description(desc), completed(false) {}
+};
+
+int main() {
+    list<Task> todoList; // Create a list of tasks
+
+    while (true) {
+        cout << "\nTo-Do List Menu:\n";
+        cout << "1. Add task\n";
+        cout << "2. View tasks\n";
+        cout << "3. Mark task as completed\n";
+        cout << "4. Remove task\n";
+        cout << "5. Quit\n";
+        cout << "Enter your choice: ";
+
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                string newTask;
+                cout << "Enter a new task: ";
+                cin.ignore(); // Clear newline character from input buffer
+                getline(cin, newTask);
+                todoList.emplace_back(newTask);
+                break;
+            }
+            case 2: {
+                cout << "Tasks in the list:\n";
+                int taskNumber = 1;
+                for (const auto& task : todoList) {
+                    cout << taskNumber << ". ";
+                    if (task.completed) {
+                        cout << "[X] ";
+                    }
+                    cout << task.description << endl;
+                    taskNumber++;
+                }
+                break;
+            }
+            case 3: {
+                int taskNumber;
+                cout << "Enter task number to mark as completed: ";
+                cin >> taskNumber;
+                if (taskNumber >= 1 && taskNumber <= static_cast<int>(todoList.size())) {
+                    auto it = todoList.begin();
+                    advance(it, taskNumber - 1);
+                    it->completed = true;
+                    cout << "Task marked as completed.\n";
+                } else {
+                    cout << "Invalid task number.\n";
+                }
+                break;
+            }
+            case 4: {
+                int taskNumber;
+                cout << "Enter task number to remove: ";
+                cin >> taskNumber;
+                if (taskNumber >= 1 && taskNumber <= static_cast<int>(todoList.size())) {
+                    auto it = todoList.begin();
+                    advance(it, taskNumber - 1);
+                    todoList.erase(it);
+                    cout << "Task removed.\n";
+                } else {
+                    cout << "Invalid task number.\n";
+                }
+                break;
+            }
+            case 5:
+                cout << "Exiting.\n";
+                return 0;
+            default:
+                cout << "Invalid choice. Please select a valid option.\n";
+        }
+    }
+
+    return 0;
+}
